@@ -1,7 +1,19 @@
 function sortArray(array) {
-  let sorted = array.map(a => a % 2 !== 0 || a === 0 ? a : array.sort((a, b) => b - a))
-  console.log(sorted)
+  let answer = [];
+  let index = 0;
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] % 2 === 0) {
+      answer[i] = array[i];
+    } else {
+      let minOdd = array.filter((n) => n % 2 !== 0).sort((a, b) => a - b)[
+        index
+      ];
+      answer[i] = minOdd;
+      index++;
+    }
+  }
+  return answer;
 }
 
-console.log(sortArray([5, 3, 2, 8, 1, 4]))
-console.log(sortArray([5, 3, 1, 8, 0]))
+console.log(sortArray([5, 3, 2, 8, 1, 4]));
+console.log(sortArray([5, 3, 1, 8, 0]));
