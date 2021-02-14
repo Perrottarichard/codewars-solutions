@@ -5,7 +5,7 @@ function encrypt(text, n) {
   const changeIt = (string) => {
     let start = [];
     let end = [];
-    let arr = text.split("");
+    let arr = string.split("");
     for (let i = 0; i < arr.length; i++) {
       if (i % 2 === 0) {
         end.push(arr[i]);
@@ -15,10 +15,9 @@ function encrypt(text, n) {
     }
     text = start.join("").concat(end.join(""));
   };
-  let answer;
   let count = 0;
   while (count < n) {
-    answer = changeIt(text);
+    changeIt(text);
     count++;
   }
   return text;
@@ -29,7 +28,7 @@ function decrypt(encryptedText, n) {
     return encryptedText;
   }
   const changeIt = (string) => {
-    let arr = encryptedText.split("");
+    let arr = string.split("");
     let start = arr.slice(arr.length / 2);
     let end = arr.slice(0, arr.length / 2);
     let ans = [];
@@ -39,10 +38,9 @@ function decrypt(encryptedText, n) {
     }
     encryptedText = ans.join("");
   };
-  let answer;
   let count = 0;
   while (count < n) {
-    answer = changeIt(encryptedText);
+    changeIt(encryptedText);
     count++;
   }
   return encryptedText;
