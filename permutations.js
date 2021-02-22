@@ -18,3 +18,4 @@ function permutations(string) {
 
 console.log(permutations("aabb")); //['aabb', 'abab', 'abba', 'baab', 'baba', 'bbaa']
 console.log(permutations("zip"));
+console.log(permutations("abcd"));
