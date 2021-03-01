@@ -64,17 +64,22 @@ var decodeBits = function (bits) {
   let i = bitCopy.length;
 
   while (i > 0) {
-    while (bitCopy.match("1".repeat(i))) {
-      bitCopy = bitCopy.replace("1".repeat(i), "_");
-      key = i;
+    if (bitCopy.match("1".repeat(i)) && !bitCopy.match("0".repeat(i))) {
+      for (let j = Math.floor(bitCopy.length / 2); j > 0; j--) {
+        while (bitCopy.match("1".repeat(j)) && bitCopy.match("0".repeat(j))) {
+          bitCopy = bitCopy.replace("1".repeat(j), "_");
+          key = j;
+        }
+      }
+      break;
     }
-    while (bitCopy.match("0".repeat(i))) {
-      bitCopy = bitCopy.replace("0".repeat(i), "*");
+    while (bitCopy.match("1".repeat(i)) && bitCopy.match("0".repeat(i))) {
+      bitCopy = bitCopy.replace("1".repeat(i), "_");
+      bitCopy = bitCopy.replace("0".repeat(i), "");
       key = i;
     }
     i--;
   }
-
   let dotKey = key;
   let dashKey = dotKey * 3;
   let wordSpaceKey = dotKey * 7;
@@ -84,7 +89,7 @@ var decodeBits = function (bits) {
     bits = bits.replace("1".repeat(dashKey), "-");
   }
   while (bits.match("0".repeat(wordSpaceKey))) {
-    bits = bits.replace("0".repeat(wordSpaceKey), "  ");
+    bits = bits.replace("0".repeat(wordSpaceKey), "*");
   }
   while (bits.match("1".repeat(dotKey))) {
     bits = bits.replace("1".repeat(dotKey), ".");
@@ -92,19 +97,52 @@ var decodeBits = function (bits) {
   while (bits.match("0".repeat(charSpaceKey))) {
     bits = bits.replace("0".repeat(charSpaceKey), " ");
   }
-
-  return bits;
+  return bits.replace(/0/g, "");
 };
 
 var decodeMorse = function (morseCode) {
   // ToDo: Accept dots, dashes and spaces, return human-readable message
-  console.log(morseCode);
+  let fin = [];
+  let removeDouble = morseCode.replace(/\s{2,}/g, "b");
+  for (let i = 0; i < removeDouble.length; i++) {
+    if (
+      removeDouble[i] !== " " &&
+      removeDouble[i] !== "b" &&
+      removeDouble[i] !== "*"
+    ) {
+      fin.push(removeDouble[i]);
+    } else if (removeDouble[i] === "b") {
+      fin.push(" ");
+    } else if (removeDouble[i] === "*") {
+      fin.push(" * ");
+    }
+  }
+  fin = fin
+    .join("")
+    .split(" ")
+    .map((m) => MORSE_CODE[m]);
+  let arr = [];
+  for (let i = 0; i < fin.length; i++) {
+    if (fin[i] !== undefined && !fin[i - 1]) {
+      arr.push(fin[i]);
+    } else if (fin[i] === undefined && fin && fin[i - 1] !== " ") {
+      arr.push(" ");
+    } else {
+      arr.push(fin[i]);
+    }
+  }
+  let answer = arr.join("").trim();
+  return answer;
 };
 
-console.log(
-  decodeMorse(
-    decodeBits(
-      "1100110011001100000011000000111111001100111111001111110000000000000011001111110011111100111111000000110011001111110000001111110011001100000011"
-    )
-  )
-); //HEY JUDE
+// console.log(
+//   decodeMorse(
+//     decodeBits(
+//       "1100110011001100000011000000111111001100111111001111110000000000000011001111110011111100111111000000110011001111110000001111110011001100000011"
+//     )
+//   )
+// ); //HEY JUDE
+
+// console.log(decodeMorse(decodeBits("01110"))); //E
+// console.log(decodeMorse(decodeBits("000000011100000"))); //E
+console.log(decodeMorse(decodeBits("1110111"))); //M
