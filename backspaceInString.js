@@ -1,5 +1,5 @@
 function cleanString(s) {
-  let sp = s.split('')
+  let sp = s.split('');
   let arr = []
   for (var i = 0; i < sp.length; i++) {
     if (sp[i] !== '#') {
